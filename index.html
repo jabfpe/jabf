@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ing. CIP Julio Arturo Bustamante Fernández | Líder de Transformación Digital y Gestión de Proyectos</title>
     <meta name="description" content="Ing. CIP Julio Bustamante - Más de 20 años de experiencia en Transformación Digital, Gobierno Digital, Gestión de Proyectos PMI/SCRUM e Inteligencia Artificial en el sector público peruano.">
-    <meta name="keywords" content="Transformación Digital, Gestión de Proyectos, PMI, SCRUM, Gobierno Digital, Inteligencia Artificial, Perú, Poder Judicial, Expediente Judicial Electrónico, Julio Arturo Bustamante Fernández">
+    <meta name="keywords" content="Transformación Digital, Gestión de Proyectos, PMI, SCRUM, Gobierno Digital, Inteligencia Artificial, Perú, Poder Judicial, Expediente Judicial Electrónico">
     <meta name="author" content="Ing. CIP Julio Arturo Bustamante Fernández">
     
     <!-- Open Graph / Facebook -->
@@ -13,14 +13,14 @@
     <meta property="og:url" content="https://juliobustamante.com/">
     <meta property="og:title" content="Ing. CIP Julio Arturo Bustamante Fernández | Líder de Transformación Digital">
     <meta property="og:description" content="Más de 20 años de experiencia en Transformación Digital, Gobierno Digital y Gestión de Proyectos PMI/SCRUM">
-    <meta property="og:image" content="https://juliobustamante.com/images/julio-bustamante-profile.jpg">
+    <meta property="og:image" content="https://juliobustamante.com/jabf.jpg">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://juliobustamante.com/">
     <meta property="twitter:title" content="Ing. CIP Julio Arturo Bustamante Fernández | Líder de Transformación Digital">
     <meta property="twitter:description" content="Más de 20 años de experiencia en Transformación Digital, Gobierno Digital y Gestión de Proyectos PMI/SCRUM">
-    <meta property="twitter:image" content="https://juliobustamante.com/images/julio-bustamante-profile.jpg">
+    <meta property="twitter:image" content="https://juliobustamante.com/jabf.jpg">
     
     <!-- Schema.org markup -->
     <script type="application/ld+json">
@@ -70,7 +70,7 @@
     
     <!-- Preload critical resources -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="images/julio-bustamante-profile.jpg" as="image">
+    <link rel="preload" href="jabf.jpg" as="image">
     
     <!-- Canonical URL -->
     <link rel="canonical" href="https://juliobustamante.com/">
@@ -293,12 +293,14 @@
             overflow: hidden;
             box-shadow: var(--box-shadow-lg);
             border: 5px solid rgba(255, 255, 255, 0.2);
+            position: relative;
         }
         
         .profile-img img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            object-position: center center;
         }
         
         .profile-img-placeholder {
@@ -310,6 +312,13 @@
             justify-content: center;
             color: white;
             font-size: 5rem;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        
+        .profile-img-placeholder.hidden {
+            display: none;
         }
         
         .contact-info {
@@ -924,9 +933,12 @@
                 </div>
                 
                 <div class="profile-container">
-                   <div class="profile-img">
-                    <img src="./jabf.jpg" alt="Ing. CIP Julio Arturo Bustamante Fernández" itemprop="image">
-                </div>
+                    <div class="profile-img">
+                        <img src="jabf.jpg" alt="Ing. CIP Julio Arturo Bustamante Fernández" itemprop="image" id="profileImage">
+                        <div class="profile-img-placeholder" id="profilePlaceholder">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1334,6 +1346,26 @@
             images.forEach(img => {
                 img.setAttribute('loading', 'lazy');
             });
+            
+            // Manejo de error para la imagen de perfil
+            const profileImage = document.getElementById('profileImage');
+            const profilePlaceholder = document.getElementById('profilePlaceholder');
+            
+            if (profileImage) {
+                profileImage.onerror = function() {
+                    this.style.display = 'none';
+                    if (profilePlaceholder) {
+                        profilePlaceholder.classList.remove('hidden');
+                    }
+                };
+                
+                // Si la imagen carga correctamente, ocultar el placeholder
+                profileImage.onload = function() {
+                    if (profilePlaceholder) {
+                        profilePlaceholder.classList.add('hidden');
+                    }
+                };
+            }
         });
     </script>
 </body>
