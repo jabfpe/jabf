@@ -189,24 +189,76 @@
     .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
     .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+    /* === Mejoras de diseño === */
+    /* Barra de progreso de scroll */
+    .scroll-progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple), var(--accent-green)); z-index: 200; transition: width 0.1s linear; }
+
+    /* Selector de idioma */
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .lang-switch { display: inline-flex; border: 1px solid var(--border); border-radius: 20px; overflow: hidden; background: var(--bg-card); }
+    .lang-btn { background: none; border: none; color: var(--text-secondary); padding: 6px 12px; cursor: pointer; font-size: 0.8rem; font-weight: 600; font-family: inherit; transition: var(--transition); }
+    .lang-btn.active { background: var(--accent-cyan); color: #0B1120; }
+    .lang-btn:focus-visible { outline: none; box-shadow: var(--focus); }
+
+    /* Fondo aurora animado del hero */
+    .hero { position: relative; overflow: hidden; }
+    .hero::before { content: ''; position: absolute; inset: -20%; z-index: 0; background:
+      radial-gradient(circle at 20% 20%, rgba(56,189,248,0.18), transparent 40%),
+      radial-gradient(circle at 80% 30%, rgba(139,92,246,0.16), transparent 42%),
+      radial-gradient(circle at 50% 80%, rgba(16,185,129,0.14), transparent 45%);
+      filter: blur(20px); animation: auroraMove 18s ease-in-out infinite alternate; pointer-events: none; }
+    @keyframes auroraMove { 0% { transform: translate(0,0) scale(1); } 50% { transform: translate(-3%,2%) scale(1.05); } 100% { transform: translate(3%,-2%) scale(1.02); } }
+    .hero-content { position: relative; z-index: 1; }
+    /* Patrón de puntos tecnológico */
+    body { background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 40px 40px; background-attachment: fixed; }
+    [data-theme="light"] body { background-image: radial-gradient(#e2e8f0 1px, transparent 1px); }
+
+    /* Nav activo (scrollspy) */
+    .nav-links a.active { color: var(--accent-cyan); }
+    .nav-links a { position: relative; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: var(--accent-cyan); transition: width 0.3s ease; }
+    .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+
+    /* Encabezados de sección con acento */
+    .section > h2, .hero + section h2 { position: relative; }
+    h2.section-title { display: inline-block; }
+
+    /* Botón volver arriba */
+    .back-to-top { position: fixed; bottom: 28px; right: 28px; width: 46px; height: 46px; border-radius: 50%; background: var(--accent-cyan); color: #0B1120; border: none; font-size: 1.2rem; cursor: pointer; opacity: 0; visibility: hidden; transform: translateY(12px); transition: var(--transition); z-index: 150; box-shadow: var(--shadow); }
+    .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+    .back-to-top:hover { background: var(--accent-green); transform: translateY(-3px); }
+
+    /* Tarjetas con glow sutil */
+    .pillar-card, .vision-card { position: relative; }
+    .pillar-card::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); box-shadow: 0 0 0 1px transparent; transition: var(--transition); pointer-events: none; }
+    .pillar-card:hover::after { box-shadow: 0 8px 30px -8px rgba(56,189,248,0.35); }
   </style>
 </head>
 <body>
+
+  <div class="scroll-progress" id="scrollProgress"></div>
 
   <header>
     <div class="nav-container container">
       <div class="logo">Julio A. Bustamante F.</div>
       <nav aria-label="Navegación principal">
         <ul class="nav-links">
-          <li><a href="#about">Sobre Mí</a></li>
-          <li><a href="#skills">Habilidades</a></li>
-          <li><a href="#experience">Experiencia</a></li>
-          <li><a href="#education">Educación</a></li>
-          <li><a href="#awards">Logros</a></li>
-          <li><a href="#contact">Contacto</a></li>
+          <li><a href="#about" data-i18n="nav.about">Sobre Mí</a></li>
+          <li><a href="#skills" data-i18n="nav.skills">Habilidades</a></li>
+          <li><a href="#experience" data-i18n="nav.experience">Experiencia</a></li>
+          <li><a href="#education" data-i18n="nav.education">Educación</a></li>
+          <li><a href="#awards" data-i18n="nav.awards">Logros</a></li>
+          <li><a href="#contact" data-i18n="nav.contact">Contacto</a></li>
         </ul>
       </nav>
-      <button class="theme-toggle" aria-label="Cambiar tema claro/oscuro" id="themeToggle">🌓</button>
+      <div class="header-actions">
+        <div class="lang-switch" role="group" aria-label="Selector de idioma / Language selector">
+          <button class="lang-btn active" data-lang="es" aria-label="Español">ES</button>
+          <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+        </div>
+        <button class="theme-toggle" aria-label="Cambiar tema claro/oscuro" id="themeToggle">🌓</button>
+      </div>
     </div>
   </header>
 
@@ -216,85 +268,85 @@
         <div class="profile-section">
           <div class="profile-img-container">
             <img src="jabf.jpg" alt="Julio Arturo Bustamante Fernández - Líder de Transformación Digital" class="profile-img" loading="eager" width="280" height="280">
-            <div class="profile-status" title="Disponible para proyectos"></div>
+            <div class="profile-status" title="Disponible para proyectos" data-i18n-title="hero.statusTitle"></div>
           </div>
           <div class="hero-badges" style="justify-content: center;">
-            <span class="badge accent">🏆 Premio BPG 2023</span>
+            <span class="badge accent" data-i18n="hero.badgeAward">🏆 Premio BPG 2023</span>
             <span class="badge">🆔 CIP 349813</span>
           </div>
         </div>
         
         <div class="hero-text">
-          <h1 id="hero-title">Inteligencia Artificial & Transformación Digital</h1>
-          <p class="hero-sub">Líder de Transformación Digital y Gestión de Proyectos con más de 20 años de experiencia en Gobierno Digital, especializado en la integración de IA para la modernización del sector público.</p>
+          <h1 id="hero-title" data-i18n="hero.title">Inteligencia Artificial & Transformación Digital</h1>
+          <p class="hero-sub" data-i18n="hero.sub">Líder de Transformación Digital y Gestión de Proyectos con más de 20 años de experiencia en Gobierno Digital, especializado en la integración de IA para la modernización del sector público.</p>
           
           <div class="flex" style="justify-content: flex-start;">
-            <a href="#contact" class="btn">📩 Contactar</a>
-            <a href="#about" class="btn btn-outline">👤 Conoce más</a>
+            <a href="#contact" class="btn" data-i18n="hero.btnContact">📩 Contactar</a>
+            <a href="#about" class="btn btn-outline" data-i18n="hero.btnMore">👤 Conoce más</a>
           </div>
 
           <div class="hero-stats">
-            <div class="stat-item"><div class="stat-num" data-target="20">0</div><div class="stat-label">Años de Experiencia</div></div>
-            <div class="stat-item"><div class="stat-num" data-target="50">0</div><div class="stat-label">Proyectos Liderados</div></div>
-            <div class="stat-item"><div class="stat-num" data-target="11">0</div><div class="stat-label">Entidades Integradas</div></div>
+            <div class="stat-item"><div class="stat-num" data-target="20">0</div><div class="stat-label" data-i18n="hero.statYears">Años de Experiencia</div></div>
+            <div class="stat-item"><div class="stat-num" data-target="50">0</div><div class="stat-label" data-i18n="hero.statProjects">Proyectos Liderados</div></div>
+            <div class="stat-item"><div class="stat-num" data-target="11">0</div><div class="stat-label" data-i18n="hero.statEntities">Entidades Integradas</div></div>
           </div>
         </div>
       </div>
     </section>
 
     <section id="about" class="section container fade-in">
-      <h2 style="text-align: center; margin-bottom: 32px;">Perfil Profesional</h2>
+      <h2 style="text-align: center; margin-bottom: 32px;" data-i18n="about.title">Perfil Profesional</h2>
       <div style="max-width: 800px; margin: 0 auto 40px; text-align: center; color: var(--text-secondary); line-height: 1.7;">
-        <p>Profesional con más de 20 años de experiencia en la gestión, liderazgo y coordinación de proyectos de Tecnología de la Información y Gobierno Digital. Experto en la implementación de sistemas de interoperabilidad y el desarrollo de plataformas de servicio al ciudadano en el sector público, aplicando metodologías PMI (PMBOK) y Ágiles (Scrum).</p>
-        <p style="margin-top: 12px;">Actualmente me especializo en la integración de Inteligencia Artificial (IA) para la optimización de procesos y la modernización de la gestión pública. He demostrado éxito en la implementación del Expediente Judicial Electrónico (EJE) y en la gestión de proyectos de interoperabilidad que integran al Poder Judicial con 11 entidades clave. También he liderado proyectos de género y cooperación internacional, coordinando el Proyecto de Mejora de la Justicia de Paz y Violencia de Género con el apoyo de KOICA y PNUD.</p>
+        <p data-i18n="about.p1">Profesional con más de 20 años de experiencia en la gestión, liderazgo y coordinación de proyectos de Tecnología de la Información y Gobierno Digital. Experto en la implementación de sistemas de interoperabilidad y el desarrollo de plataformas de servicio al ciudadano en el sector público, aplicando metodologías PMI (PMBOK) y Ágiles (Scrum).</p>
+        <p style="margin-top: 12px;" data-i18n="about.p2">Actualmente me especializo en la integración de Inteligencia Artificial (IA) para la optimización de procesos y la modernización de la gestión pública. He demostrado éxito en la implementación del Expediente Judicial Electrónico (EJE) y en la gestión de proyectos de interoperabilidad que integran al Poder Judicial con 11 entidades clave. También he liderado proyectos de género y cooperación internacional, coordinando el Proyecto de Mejora de la Justicia de Paz y Violencia de Género con el apoyo de KOICA y PNUD.</p>
       </div>
 
       <div class="grid pillars">
         <div class="pillar-card">
           <div class="pillar-icon">🏛️</div>
-          <h3>GovTech & Interoperabilidad</h3>
-          <p>Arquitectura de integración entre entidades públicas, EJE y modernización de trámites ciudadanos bajo estándares de seguridad y gobernanza digital.</p>
+          <h3 data-i18n="about.pillar1Title">GovTech & Interoperabilidad</h3>
+          <p data-i18n="about.pillar1Desc">Arquitectura de integración entre entidades públicas, EJE y modernización de trámites ciudadanos bajo estándares de seguridad y gobernanza digital.</p>
         </div>
         <div class="pillar-card">
           <div class="pillar-icon">🤖</div>
-          <h3>IA & Data Strategy</h3>
-          <p>Maestría en IA en curso. Implementación de modelos LLM, analítica predictiva y gobernanza de datos para optimizar procesos judiciales y públicos.</p>
+          <h3 data-i18n="about.pillar2Title">IA & Data Strategy</h3>
+          <p data-i18n="about.pillar2Desc">Maestría en IA en curso. Implementación de modelos LLM, analítica predictiva y gobernanza de datos para optimizar procesos judiciales y públicos.</p>
         </div>
         <div class="pillar-card">
           <div class="pillar-icon">📊</div>
-          <h3>Liderazgo Ágil & PMI</h3>
-          <p>Gestión de portfolios bajo PMBOK 7, Scrum Master/PO certificado y liderazgo de equipos multidisciplinarios en proyectos de alta complejidad.</p>
+          <h3 data-i18n="about.pillar3Title">Liderazgo Ágil & PMI</h3>
+          <p data-i18n="about.pillar3Desc">Gestión de portfolios bajo PMBOK 7, Scrum Master/PO certificado y liderazgo de equipos multidisciplinarios en proyectos de alta complejidad.</p>
         </div>
       </div>
     </section>
 
     <section id="skills" class="section container fade-in" aria-labelledby="skills-title">
-      <h2 id="skills-title" style="text-align: center; margin-bottom: 8px;">Stack Tecnológico & Metodológico</h2>
-      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 24px;">Capacidades alineadas a estándares internacionales y arquitectura moderna.</p>
+      <h2 id="skills-title" style="text-align: center; margin-bottom: 8px;" data-i18n="skills.title">Stack Tecnológico & Metodológico</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 24px;" data-i18n="skills.subtitle">Capacidades alineadas a estándares internacionales y arquitectura moderna.</p>
       
       <div class="tabs" role="tablist" aria-label="Categorías de habilidades">
-        <button class="tab-btn active" data-filter="all" role="tab" aria-selected="true">Todos</button>
-        <button class="tab-btn" data-filter="soft" role="tab">Habilidades Blandas</button>
-        <button class="tab-btn" data-filter="gestion" role="tab">Gestión & Metodologías</button>
-        <button class="tab-btn" data-filter="dev-model" role="tab">Desarrollo & Modelado</button>
-        <button class="tab-btn" data-filter="infra-devops" role="tab">Infraestructura & DevOps</button>
+        <button class="tab-btn active" data-filter="all" role="tab" aria-selected="true" data-i18n="skills.tabAll">Todos</button>
+        <button class="tab-btn" data-filter="soft" role="tab" data-i18n="skills.tabSoft">Habilidades Blandas</button>
+        <button class="tab-btn" data-filter="gestion" role="tab" data-i18n="skills.tabMgmt">Gestión & Metodologías</button>
+        <button class="tab-btn" data-filter="dev-model" role="tab" data-i18n="skills.tabDev">Desarrollo & Modelado</button>
+        <button class="tab-btn" data-filter="infra-devops" role="tab" data-i18n="skills.tabInfra">Infraestructura & DevOps</button>
       </div>
 
       <div class="grid skills-grid" id="skillsContainer">
-        <div class="skill-tag" data-cat="soft">Liderazgo Estratégico</div>
-        <div class="skill-tag" data-cat="soft">Persuasión</div>
-        <div class="skill-tag" data-cat="soft">Responsabilidad</div>
-        <div class="skill-tag" data-cat="soft">Comunicación verbal/escrita</div>
-        <div class="skill-tag" data-cat="soft">Organización del tiempo</div>
-        <div class="skill-tag" data-cat="soft">Pensamiento crítico</div>
-        <div class="skill-tag" data-cat="soft">Ética e Integridad</div>
-        <div class="skill-tag" data-cat="soft">Empatía</div>
-        <div class="skill-tag" data-cat="soft">Resolución de conflictos</div>
-        <div class="skill-tag" data-cat="soft">Iniciativa propia</div>
-        <div class="skill-tag" data-cat="soft">Relaciones interpersonales</div>
-        <div class="skill-tag" data-cat="soft">Trabajo bajo presión</div>
-        <div class="skill-tag" data-cat="soft">Escucha activa</div>
-        <div class="skill-tag" data-cat="soft">Búsqueda de innovación</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.leadership">Liderazgo Estratégico</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.persuasion">Persuasión</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.responsibility">Responsabilidad</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.communication">Comunicación verbal/escrita</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.timeMgmt">Organización del tiempo</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.criticalThinking">Pensamiento crítico</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.ethics">Ética e Integridad</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.empathy">Empatía</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.conflict">Resolución de conflictos</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.initiative">Iniciativa propia</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.interpersonal">Relaciones interpersonales</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.pressure">Trabajo bajo presión</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.listening">Escucha activa</div>
+        <div class="skill-tag" data-cat="soft" data-i18n="skill.innovation">Búsqueda de innovación</div>
 
         <div class="skill-tag" data-cat="gestion">PMI - PMBOK</div>
         <div class="skill-tag" data-cat="gestion">CA Clarity PPM</div>
@@ -337,71 +389,71 @@
     </section>
 
     <section id="experience" class="section container fade-in" aria-labelledby="exp-title">
-      <h2 id="exp-title" style="text-align: center; margin-bottom: 32px;">Trayectoria Profesional</h2>
+      <h2 id="exp-title" style="text-align: center; margin-bottom: 32px;" data-i18n="exp.title">Trayectoria Profesional</h2>
       <div class="timeline">
         <div class="timeline-item">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2014 - Actualidad</div>
+          <div class="timeline-date" data-i18n="exp.date1">2014 - Actualidad</div>
           <h3 class="timeline-title">Poder Judicial del Perú</h3>
-          <div class="timeline-role">Gestor y Coordinador de Proyectos de Transformación Digital</div>
+          <div class="timeline-role" data-i18n="exp.role1">Gestor y Coordinador de Proyectos de Transformación Digital</div>
           <ul class="timeline-desc">
-            <li>Lideré la gestión e implementación del Expediente Judicial Electrónico (EJE)</li>
-            <li>Gestioné proyectos de interoperabilidad exitosos integrando PJ con 11 entidades clave</li>
-            <li>Lideré el Proyecto del Certificado Electrónico de Antecedentes Penales (CAPe)</li>
-            <li>Coordinador del Proyecto de Mejora de Justicia de Paz y Violencia de Género (KOICA/PNUD)</li>
-            <li>Aseguré cumplimiento normativo y gobernanza en todos los proyectos</li>
+            <li data-i18n="exp.d1a">Lideré la gestión e implementación del Expediente Judicial Electrónico (EJE)</li>
+            <li data-i18n="exp.d1b">Gestioné proyectos de interoperabilidad exitosos integrando PJ con 11 entidades clave</li>
+            <li data-i18n="exp.d1c">Lideré el Proyecto del Certificado Electrónico de Antecedentes Penales (CAPe)</li>
+            <li data-i18n="exp.d1d">Coordinador del Proyecto de Mejora de Justicia de Paz y Violencia de Género (KOICA/PNUD)</li>
+            <li data-i18n="exp.d1e">Aseguré cumplimiento normativo y gobernanza en todos los proyectos</li>
           </ul>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2013 - 2014</div>
+          <div class="timeline-date" data-i18n="exp.date2">2013 - 2014</div>
           <h3 class="timeline-title">Servicio de Administración Tributaria de Lima - SAT</h3>
-          <div class="timeline-role">Jefe de Proyectos</div>
+          <div class="timeline-role" data-i18n="exp.role2">Jefe de Proyectos</div>
           <ul class="timeline-desc">
-            <li>Lideré y gestioné el Proyecto GEPSIS</li>
-            <li>Implementé el Sistema de Asuntos Judiciales (SAJU) para Gerencia de Impugnaciones</li>
+            <li data-i18n="exp.d2a">Lideré y gestioné el Proyecto GEPSIS</li>
+            <li data-i18n="exp.d2b">Implementé el Sistema de Asuntos Judiciales (SAJU) para Gerencia de Impugnaciones</li>
           </ul>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">2009 - 2013</div>
+          <div class="timeline-date" data-i18n="exp.date3">2009 - 2013</div>
           <h3 class="timeline-title">Consultora Teamsoft</h3>
-          <div class="timeline-role">Gestor Líder de Proyectos</div>
+          <div class="timeline-role" data-i18n="exp.role3">Gestor Líder de Proyectos</div>
           <ul class="timeline-desc">
-            <li>Proyectos para América Móvil Perú SAC</li>
-            <li>Implementación de requerimientos funcionales Ventas/PostVentas</li>
-            <li>Despliegue de sistemas en Centros de Atención al Cliente (CAC)</li>
+            <li data-i18n="exp.d3a">Proyectos para América Móvil Perú SAC</li>
+            <li data-i18n="exp.d3b">Implementación de requerimientos funcionales Ventas/PostVentas</li>
+            <li data-i18n="exp.d3c">Despliegue de sistemas en Centros de Atención al Cliente (CAC)</li>
           </ul>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">1999 - 2009</div>
+          <div class="timeline-date" data-i18n="exp.date4">1999 - 2009</div>
           <h3 class="timeline-title">Poder Judicial del Perú</h3>
-          <div class="timeline-role">Analista, Gestor y Coordinador de Proyectos</div>
+          <div class="timeline-role" data-i18n="exp.role4">Analista, Gestor y Coordinador de Proyectos</div>
           <ul class="timeline-desc">
-            <li>Lideré proyectos en el Sistema Integrado Judicial (SIJ)</li>
-            <li>Implementé sistemas de apoyo a justiciables a nivel nacional</li>
-            <li>Gestión de despliegue funcional y técnico a nivel nacional</li>
+            <li data-i18n="exp.d4a">Lideré proyectos en el Sistema Integrado Judicial (SIJ)</li>
+            <li data-i18n="exp.d4b">Implementé sistemas de apoyo a justiciables a nivel nacional</li>
+            <li data-i18n="exp.d4c">Gestión de despliegue funcional y técnico a nivel nacional</li>
           </ul>
         </div>
         <div class="timeline-item">
           <div class="timeline-dot"></div>
-          <div class="timeline-date">1993 - 1999</div>
+          <div class="timeline-date" data-i18n="exp.date5">1993 - 1999</div>
           <h3 class="timeline-title">ABS COMPUTER S.A.</h3>
-          <div class="timeline-role">Jefe de Soporte Técnico</div>
+          <div class="timeline-role" data-i18n="exp.role5">Jefe de Soporte Técnico</div>
           <ul class="timeline-desc">
-            <li>Lideré y gestioné infraestructura tecnológica para cartera de clientes corporativos</li>
+            <li data-i18n="exp.d5a">Lideré y gestioné infraestructura tecnológica para cartera de clientes corporativos</li>
           </ul>
         </div>
       </div>
     </section>
 
     <section id="education" class="section container fade-in" aria-labelledby="edu-title">
-      <h2 id="edu-title" style="text-align: center; margin-bottom: 12px;">Educación & Certificaciones</h2>
-      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 32px;">Formación continua en IA, gestión de proyectos y transformación digital.</p>
+      <h2 id="edu-title" style="text-align: center; margin-bottom: 12px;" data-i18n="edu.title">Educación & Certificaciones</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: 32px;" data-i18n="edu.subtitle">Formación continua en IA, gestión de proyectos y transformación digital.</p>
       
       <div class="grid edu-grid">
-        <div class="edu-card"><div class="edu-year">2024 - En curso</div><div class="edu-title">Maestría en Inteligencia Artificial</div><div class="edu-inst">Universidad Internacional de la Rioja - UNIR España</div></div>
+        <div class="edu-card"><div class="edu-year" data-i18n="edu.ongoing">2024 - En curso</div><div class="edu-title" data-i18n="edu.m1">Maestría en Inteligencia Artificial</div><div class="edu-inst">Universidad Internacional de la Rioja - UNIR España</div></div>
         <div class="edu-card"><div class="edu-year">2020 - 2023</div><div class="edu-title">Licenciatura en Ingeniería Industrial</div><div class="edu-inst">Universidad Tecnológica Latinoamericana en Línea - UTEL México</div></div>
         <div class="edu-card"><div class="edu-year">2024</div><div class="edu-title">Continuing Education Certificate in Leadership</div><div class="edu-inst">City University Miami - MIU</div></div>
         <div class="edu-card"><div class="edu-year">2025</div><div class="edu-title">Diplomado Alta Especialización en Gerencia de Proyectos (PMI)</div><div class="edu-inst">Escuela Nacional de Políticas Públicas</div></div>
@@ -424,20 +476,20 @@
     </section>
 
     <section id="metrics" class="section container fade-in">
-      <h2 style="text-align: center; margin-bottom: 16px;">Dashboard de Impacto Público</h2>
+      <h2 style="text-align: center; margin-bottom: 16px;" data-i18n="metrics.title">Dashboard de Impacto Público</h2>
       <div class="dashboard">
         <div class="metric-row">
-          <span class="metric-label">Nodos de Interoperabilidad Activos</span>
+          <span class="metric-label" data-i18n="metrics.m1">Nodos de Interoperabilidad Activos</span>
           <div class="metric-bar"><div class="metric-fill" data-width="92"></div></div>
           <span class="metric-value">92%</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Reducción Tiempo en Trámites Judiciales</span>
+          <span class="metric-label" data-i18n="metrics.m2">Reducción Tiempo en Trámites Judiciales</span>
           <div class="metric-bar"><div class="metric-fill" data-width="78"></div></div>
           <span class="metric-value">-78%</span>
         </div>
         <div class="metric-row">
-          <span class="metric-label">Modelos IA Evaluados/Implementados</span>
+          <span class="metric-label" data-i18n="metrics.m3">Modelos IA Evaluados/Implementados</span>
           <div class="metric-bar"><div class="metric-fill" data-width="85"></div></div>
           <span class="metric-value">85%</span>
         </div>
@@ -445,74 +497,74 @@
     </section>
 
     <section id="vision" class="section container fade-in">
-      <h2 style="text-align: center; margin-bottom: 32px;">Visión Tecnológica 2025-2030</h2>
+      <h2 style="text-align: center; margin-bottom: 32px;" data-i18n="vision.title">Visión Tecnológica 2025-2030</h2>
       <div class="grid vision-grid">
         <div class="vision-card">
           <div class="vision-year">2025</div>
-          <h3>IA Generativa Ciudadana</h3>
-          <p>Despliegue de asistentes virtuales con LLMs seguros para orientación legal y trámites automáticos.</p>
+          <h3 data-i18n="vision.v1Title">IA Generativa Ciudadana</h3>
+          <p data-i18n="vision.v1Desc">Despliegue de asistentes virtuales con LLMs seguros para orientación legal y trámites automáticos.</p>
         </div>
         <div class="vision-card">
           <div class="vision-year">2027</div>
-          <h3>Arquitectura Zero-Trust</h3>
-          <p>Migración de infraestructura pública hacia modelos de seguridad verificada continua e identidad descentralizada.</p>
+          <h3 data-i18n="vision.v2Title">Arquitectura Zero-Trust</h3>
+          <p data-i18n="vision.v2Desc">Migración de infraestructura pública hacia modelos de seguridad verificada continua e identidad descentralizada.</p>
         </div>
         <div class="vision-card">
           <div class="vision-year">2030</div>
-          <h3>Data Spaces Públicos</h3>
-          <p>Ecosistema interoperable de datos gubernamentales con gobernanza ética, analítica predictiva y transparencia auditable.</p>
+          <h3 data-i18n="vision.v3Title">Data Spaces Públicos</h3>
+          <p data-i18n="vision.v3Desc">Ecosistema interoperable de datos gubernamentales con gobernanza ética, analítica predictiva y transparencia auditable.</p>
         </div>
       </div>
     </section>
 
     <section id="awards" class="section container fade-in" aria-labelledby="awards-title">
-      <h2 id="awards-title" style="text-align: center; margin-bottom: 32px;">Reconocimientos & Logros</h2>
+      <h2 id="awards-title" style="text-align: center; margin-bottom: 32px;" data-i18n="awards.title">Reconocimientos & Logros</h2>
       <div class="grid awards-grid">
         <div class="award-card">
           <div class="edu-year">2023</div>
-          <h4>Premio Buenas Prácticas en Gestión Pública</h4>
-          <p>Cooperación Público-Pública: Interoperabilidad y EJE en casos de violencia de género.</p>
-          <a href="https://premiobpg.pe/constancia/2023050936956883.pdf" target="_blank" rel="noopener" class="award-link">📄 Ver constancia</a>
+          <h4 data-i18n="awards.a1Title">Premio Buenas Prácticas en Gestión Pública</h4>
+          <p data-i18n="awards.a1Desc">Cooperación Público-Pública: Interoperabilidad y EJE en casos de violencia de género.</p>
+          <a href="https://premiobpg.pe/constancia/2023050936956883.pdf" target="_blank" rel="noopener" class="award-link" data-i18n="awards.linkCert">📄 Ver constancia</a>
         </div>
         <div class="award-card">
           <div class="edu-year">2023-2024</div>
-          <h4>Reconocimiento por Destacada Labor</h4>
-          <p>Servidor Público 2023 y 2024 por desempeño sobresaliente.</p>
-          <a href="https://www.pj.gob.pe/wps/wcm/connect/83c7eb804114367194dc9e1666a80600/RESOLUCION+ADMINISTRATIVA+517-2024-GGPJ.pdf?MOD=AJPERES&CACHEID=83c7eb804114367194dc9e1666a80600" target="_blank" rel="noopener" class="award-link">📜 Ver resolución</a>
+          <h4 data-i18n="awards.a2Title">Reconocimiento por Destacada Labor</h4>
+          <p data-i18n="awards.a2Desc">Servidor Público 2023 y 2024 por desempeño sobresaliente.</p>
+          <a href="https://www.pj.gob.pe/wps/wcm/connect/83c7eb804114367194dc9e1666a80600/RESOLUCION+ADMINISTRATIVA+517-2024-GGPJ.pdf?MOD=AJPERES&CACHEID=83c7eb804114367194dc9e1666a80600" target="_blank" rel="noopener" class="award-link" data-i18n="awards.linkRes">📜 Ver resolución</a>
         </div>
         <div class="award-card">
           <div class="edu-year">2024</div>
-          <h4>Reconocimiento Implementación Interoperabilidad</h4>
-          <p>EJE aplicado a casos de Violencia Contra la Mujer.</p>
-          <a href="https://www.eje.pe/wps/wcm/connect/972205004074a807ad3fbf1666a80600/RESOLUCION+ADMINISTRATIVA+405-2024-GGPJ.pdf?MOD=AJPERES&CACHEID=972205004074a807ad3fbf1666a80600" target="_blank" rel="noopener" class="award-link">📜 Ver resolución</a>
+          <h4 data-i18n="awards.a3Title">Reconocimiento Implementación Interoperabilidad</h4>
+          <p data-i18n="awards.a3Desc">EJE aplicado a casos de Violencia Contra la Mujer.</p>
+          <a href="https://www.eje.pe/wps/wcm/connect/972205004074a807ad3fbf1666a80600/RESOLUCION+ADMINISTRATIVA+405-2024-GGPJ.pdf?MOD=AJPERES&CACHEID=972205004074a807ad3fbf1666a80600" target="_blank" rel="noopener" class="award-link" data-i18n="awards.linkRes2">📜 Ver resolución</a>
         </div>
         <div class="award-card">
           <div class="edu-year">2024</div>
-          <h4>Viaje Oficial a Corea del Sur</h4>
-          <p>Pasantía de fortalecimiento de capacidades para respuesta a Violencia de Género.</p>
-          <a href="https://www.pj.gob.pe/wps/wcm/connect/cortesuprema/s_cortes_suprema_home/as_inicio/as_enlaces_destacados/as_imagen_prensa/as_notas_noticias/2024/cs_n-integrantes-poder-judicial-fortalecen-capacidades-respuesta-violencia-genero-corea-del-sur" target="_blank" rel="noopener" class="award-link">🌏 Ver publicación</a>
+          <h4 data-i18n="awards.a4Title">Viaje Oficial a Corea del Sur</h4>
+          <p data-i18n="awards.a4Desc">Pasantía de fortalecimiento de capacidades para respuesta a Violencia de Género.</p>
+          <a href="https://www.pj.gob.pe/wps/wcm/connect/cortesuprema/s_cortes_suprema_home/as_inicio/as_enlaces_destacados/as_imagen_prensa/as_notas_noticias/2024/cs_n-integrantes-poder-judicial-fortalecen-capacidades-respuesta-violencia-genero-corea-del-sur" target="_blank" rel="noopener" class="award-link" data-i18n="awards.linkPub">🌏 Ver publicación</a>
         </div>
         <div class="award-card">
           <div class="edu-year">2019</div>
-          <h4>Co-autor Registro Nacional de Condenas (RNC)</h4>
-          <p>Registro oficial de software ante INDECOPI (Exp. 2550-2019).</p>
-          <a href="https://servicio.indecopi.gob.pe/portalSAE/" target="_blank" rel="noopener" class="award-link">🔍 Ver registro</a>
+          <h4 data-i18n="awards.a5Title">Co-autor Registro Nacional de Condenas (RNC)</h4>
+          <p data-i18n="awards.a5Desc">Registro oficial de software ante INDECOPI (Exp. 2550-2019).</p>
+          <a href="https://servicio.indecopi.gob.pe/portalSAE/" target="_blank" rel="noopener" class="award-link" data-i18n="awards.linkReg">🔍 Ver registro</a>
         </div>
         <div class="award-card">
           <div class="edu-year">2026</div>
-          <h4>Radar Multidimensional de Modelos IA</h4>
-          <p>Análisis comparativo de capacidades de LLMs aplicado al sector público.</p>
-          <a href="https://claude.ai/public/artifacts/4ea26b7b-13cc-4ced-9cf9-35702cb81822" target="_blank" rel="noopener" class="award-link">📊 Ver modelo</a>
+          <h4 data-i18n="awards.a6Title">Radar Multidimensional de Modelos IA</h4>
+          <p data-i18n="awards.a6Desc">Análisis comparativo de capacidades de LLMs aplicado al sector público.</p>
+          <a href="https://claude.ai/public/artifacts/4ea26b7b-13cc-4ced-9cf9-35702cb81822" target="_blank" rel="noopener" class="award-link" data-i18n="awards.linkModel">📊 Ver modelo</a>
         </div>
       </div>
     </section>
 
     <section id="contact" class="section container fade-in" aria-labelledby="contact-title">
-      <h2 id="contact-title" style="text-align: center; margin-bottom: 32px;">Contacto Directo</h2>
+      <h2 id="contact-title" style="text-align: center; margin-bottom: 32px;" data-i18n="contact.title">Contacto Directo</h2>
       <div class="contact-layout">
         <div>
-          <h3 style="margin-bottom: 16px;">¿Interesado en colaborar en proyectos de transformación digital o IA?</h3>
-          <p style="color: var(--text-secondary); margin-bottom: 24px;">Estoy disponible para consultoría, arquitectura de sistemas, liderazgo de proyectos GovTech y mentoría técnica.</p>
+          <h3 style="margin-bottom: 16px;" data-i18n="contact.heading">¿Interesado en colaborar en proyectos de transformación digital o IA?</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 24px;" data-i18n="contact.desc">Estoy disponible para consultoría, arquitectura de sistemas, liderazgo de proyectos GovTech y mentoría técnica.</p>
           <div class="contact-info">
             <a href="tel:+51935385477">📞 (+51) 935 385 477</a>
             <a href="https://wa.me/51987700989" target="_blank" rel="noopener">💬 WhatsApp: 987 700 989</a>
@@ -521,10 +573,10 @@
           </div>
         </div>
         <form id="contactForm" novalidate>
-          <div class="form-group"><label for="name">Nombre completo</label><input type="text" id="name" required placeholder="Tu nombre"></div>
-          <div class="form-group"><label for="email">Correo electrónico</label><input type="email" id="email" required placeholder="tu@email.com"></div>
-          <div class="form-group"><label for="msg">Mensaje</label><textarea id="msg" rows="4" required placeholder="Describe brevemente tu proyecto o consulta..."></textarea></div>
-          <button type="submit" class="btn" style="width: 100%;">Enviar Mensaje</button>
+          <div class="form-group"><label for="name" data-i18n="contact.labelName">Nombre completo</label><input type="text" id="name" required placeholder="Tu nombre" data-i18n-placeholder="contact.phName"></div>
+          <div class="form-group"><label for="email" data-i18n="contact.labelEmail">Correo electrónico</label><input type="email" id="email" required placeholder="tu@email.com" data-i18n-placeholder="contact.phEmail"></div>
+          <div class="form-group"><label for="msg" data-i18n="contact.labelMsg">Mensaje</label><textarea id="msg" rows="4" required placeholder="Describe brevemente tu proyecto o consulta..." data-i18n-placeholder="contact.phMsg"></textarea></div>
+          <button type="submit" class="btn" style="width: 100%;" data-i18n="contact.btnSend">Enviar Mensaje</button>
         </form>
       </div>
     </section>
@@ -533,18 +585,131 @@
   <footer>
     <div class="container">
       <nav class="footer-links" aria-label="Navegación secundaria">
-        <a href="#about">Sobre Mí</a>
-        <a href="#skills">Habilidades</a>
-        <a href="#experience">Experiencia</a>
-        <a href="#education">Educación</a>
-        <a href="#awards">Logros</a>
+        <a href="#about" data-i18n="nav.about">Sobre Mí</a>
+        <a href="#skills" data-i18n="nav.skills">Habilidades</a>
+        <a href="#experience" data-i18n="nav.experience">Experiencia</a>
+        <a href="#education" data-i18n="nav.education">Educación</a>
+        <a href="#awards" data-i18n="nav.awards">Logros</a>
       </nav>
-      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px;">© 2025 Ing. CIP Julio Arturo Bustamante Fernández. Todos los derechos reservados.</p>
-      <a href="cv_jbustamantef_CIP[FP].pdf" class="btn btn-outline" download>📥 Descargar CV Completo</a>
+      <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 16px;" data-i18n="footer.rights">© 2025 Ing. CIP Julio Arturo Bustamante Fernández. Todos los derechos reservados.</p>
+      <a href="cv_jbustamantef_CIP[FP].pdf" class="btn btn-outline" download data-i18n="footer.downloadCV">📥 Descargar CV Completo</a>
     </div>
   </footer>
 
+  <button class="back-to-top" id="backToTop" aria-label="Volver arriba">↑</button>
+
   <script>
+    /* ===== Motor de idioma (ES por defecto, ES <-> EN) ===== */
+    const I18N_EN = {
+      "nav.about":"About","nav.skills":"Skills","nav.experience":"Experience","nav.education":"Education","nav.awards":"Achievements","nav.contact":"Contact",
+      "hero.statusTitle":"Available for projects",
+      "hero.badgeAward":"\uD83C\uDFC6 BPG Award 2023",
+      "hero.title":"Artificial Intelligence & Digital Transformation",
+      "hero.sub":"Digital Transformation and Project Management Leader with over 20 years of experience in Digital Government, specialized in integrating AI to modernize the public sector.",
+      "hero.btnContact":"\uD83D\uDCE9 Contact","hero.btnMore":"\uD83D\uDC64 Learn more",
+      "hero.statYears":"Years of Experience","hero.statProjects":"Projects Led","hero.statEntities":"Integrated Entities",
+      "about.title":"Professional Profile",
+      "about.p1":"Professional with over 20 years of experience in the management, leadership and coordination of Information Technology and Digital Government projects. Expert in implementing interoperability systems and developing citizen-service platforms in the public sector, applying PMI (PMBOK) and Agile (Scrum) methodologies.",
+      "about.p2":"I currently specialize in integrating Artificial Intelligence (AI) to optimize processes and modernize public management. I have successfully implemented the Electronic Judicial File (EJE) and managed interoperability projects that connect the Judiciary with 11 key entities. I have also led gender and international cooperation projects, coordinating the Justice of the Peace and Gender-Based Violence Improvement Project with support from KOICA and UNDP.",
+      "about.pillar1Title":"GovTech & Interoperability",
+      "about.pillar1Desc":"Integration architecture across public entities, EJE and modernization of citizen procedures under security and digital-governance standards.",
+      "about.pillar2Title":"AI & Data Strategy",
+      "about.pillar2Desc":"AI Master's degree in progress. Implementation of LLM models, predictive analytics and data governance to optimize judicial and public processes.",
+      "about.pillar3Title":"Agile Leadership & PMI",
+      "about.pillar3Desc":"Portfolio management under PMBOK 7, certified Scrum Master/PO and leadership of multidisciplinary teams in highly complex projects.",
+      "skills.title":"Technology & Methodology Stack",
+      "skills.subtitle":"Capabilities aligned with international standards and modern architecture.",
+      "skills.tabAll":"All","skills.tabSoft":"Soft Skills","skills.tabMgmt":"Management & Methodologies","skills.tabDev":"Development & Modeling","skills.tabInfra":"Infrastructure & DevOps",
+      "skill.leadership":"Strategic Leadership","skill.persuasion":"Persuasion","skill.responsibility":"Responsibility","skill.communication":"Verbal/written communication","skill.timeMgmt":"Time management","skill.criticalThinking":"Critical thinking","skill.ethics":"Ethics & Integrity","skill.empathy":"Empathy","skill.conflict":"Conflict resolution","skill.initiative":"Self-initiative","skill.interpersonal":"Interpersonal relations","skill.pressure":"Working under pressure","skill.listening":"Active listening","skill.innovation":"Drive for innovation",
+      "exp.title":"Professional Career",
+      "exp.date1":"2014 - Present","exp.role1":"Digital Transformation Project Manager & Coordinator",
+      "exp.d1a":"Led the management and implementation of the Electronic Judicial File (EJE)",
+      "exp.d1b":"Managed successful interoperability projects connecting the Judiciary with 11 key entities",
+      "exp.d1c":"Led the Electronic Criminal Record Certificate Project (CAPe)",
+      "exp.d1d":"Coordinator of the Justice of the Peace and Gender-Based Violence Improvement Project (KOICA/UNDP)",
+      "exp.d1e":"Ensured regulatory compliance and governance across all projects",
+      "exp.date2":"2013 - 2014","exp.role2":"Head of Projects",
+      "exp.d2a":"Led and managed the GEPSIS Project",
+      "exp.d2b":"Implemented the Judicial Affairs System (SAJU) for the Appeals Management Office",
+      "exp.date3":"2009 - 2013","exp.role3":"Lead Project Manager",
+      "exp.d3a":"Projects for Am\u00e9rica M\u00f3vil Per\u00fa SAC",
+      "exp.d3b":"Implementation of Sales/After-Sales functional requirements",
+      "exp.d3c":"Deployment of systems in Customer Service Centers (CAC)",
+      "exp.date4":"1999 - 2009","exp.role4":"Analyst, Project Manager & Coordinator",
+      "exp.d4a":"Led projects in the Integrated Judicial System (SIJ)",
+      "exp.d4b":"Implemented support systems for litigants nationwide",
+      "exp.d4c":"Functional and technical deployment management nationwide",
+      "exp.date5":"1993 - 1999","exp.role5":"Head of Technical Support",
+      "exp.d5a":"Led and managed technology infrastructure for a portfolio of corporate clients",
+      "edu.title":"Education & Certifications",
+      "edu.subtitle":"Continuous training in AI, project management and digital transformation.",
+      "edu.ongoing":"2024 - In progress","edu.m1":"Master's Degree in Artificial Intelligence",
+      "metrics.title":"Public Impact Dashboard",
+      "metrics.m1":"Active Interoperability Nodes","metrics.m2":"Reduction of Time in Judicial Procedures","metrics.m3":"AI Models Evaluated/Implemented",
+      "vision.title":"Technology Vision 2025-2030",
+      "vision.v1Title":"Citizen Generative AI","vision.v1Desc":"Deployment of virtual assistants with secure LLMs for legal guidance and automated procedures.",
+      "vision.v2Title":"Zero-Trust Architecture","vision.v2Desc":"Migration of public infrastructure toward continuous verified security models and decentralized identity.",
+      "vision.v3Title":"Public Data Spaces","vision.v3Desc":"Interoperable ecosystem of government data with ethical governance, predictive analytics and auditable transparency.",
+      "awards.title":"Recognitions & Achievements",
+      "awards.a1Title":"Good Practices in Public Management Award","awards.a1Desc":"Public-Public Cooperation: Interoperability and EJE in gender-based violence cases.","awards.linkCert":"\uD83D\uDCC4 View certificate",
+      "awards.a2Title":"Recognition for Outstanding Work","awards.a2Desc":"Public Servant 2023 and 2024 for outstanding performance.","awards.linkRes":"\uD83D\uDCDC View resolution",
+      "awards.a3Title":"Interoperability Implementation Recognition","awards.a3Desc":"EJE applied to Violence Against Women cases.","awards.linkRes2":"\uD83D\uDCDC View resolution",
+      "awards.a4Title":"Official Trip to South Korea","awards.a4Desc":"Capacity-building internship for gender-based violence response.","awards.linkPub":"\uD83C\uDF0F View publication",
+      "awards.a5Title":"Co-author National Convictions Registry (RNC)","awards.a5Desc":"Official software registration with INDECOPI (File 2550-2019).","awards.linkReg":"\uD83D\uDD0D View registration",
+      "awards.a6Title":"Multidimensional AI Model Radar","awards.a6Desc":"Comparative analysis of LLM capabilities applied to the public sector.","awards.linkModel":"\uD83D\uDCCA View model",
+      "contact.title":"Direct Contact",
+      "contact.heading":"Interested in collaborating on digital transformation or AI projects?",
+      "contact.desc":"I am available for consulting, systems architecture, GovTech project leadership and technical mentoring.",
+      "contact.labelName":"Full name","contact.labelEmail":"Email address","contact.labelMsg":"Message",
+      "contact.phName":"Your name","contact.phEmail":"you@email.com","contact.phMsg":"Briefly describe your project or inquiry...",
+      "contact.btnSend":"Send Message",
+      "footer.rights":"\u00A9 2025 Eng. CIP Julio Arturo Bustamante Fern\u00e1ndez. All rights reserved.",
+      "footer.downloadCV":"\uD83D\uDCE5 Download Full CV"
+    };
+    const I18N_META = {
+      es: { title: "Julio A. Bustamante F. | Transformaci\u00f3n Digital & IA", desc: "Portafolio profesional de Julio Arturo Bustamante Fern\u00e1ndez. L\u00edder en Transformaci\u00f3n Digital, IA, Interoperabilidad y Gesti\u00f3n de Proyectos en el sector p\u00fablico peruano. CIP 349813." },
+      en: { title: "Julio A. Bustamante F. | Digital Transformation & AI", desc: "Professional portfolio of Julio Arturo Bustamante Fern\u00e1ndez. Leader in Digital Transformation, AI, Interoperability and Project Management in the Peruvian public sector. CIP 349813." }
+    };
+
+    (function initI18n(){
+      // Guardar textos originales en espa\u00f1ol
+      document.querySelectorAll('[data-i18n]').forEach(el => { el.dataset.es = el.innerHTML; });
+      document.querySelectorAll('[data-i18n-placeholder]').forEach(el => { el.dataset.esPh = el.getAttribute('placeholder'); });
+      document.querySelectorAll('[data-i18n-title]').forEach(el => { el.dataset.esTitle = el.getAttribute('title'); });
+
+      const metaDesc = document.querySelector('meta[name="description"]');
+      function applyLang(lang){
+        const isEn = lang === 'en';
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const key = el.getAttribute('data-i18n');
+          el.innerHTML = isEn ? (I18N_EN[key] ?? el.dataset.es) : el.dataset.es;
+        });
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+          const key = el.getAttribute('data-i18n-placeholder');
+          el.setAttribute('placeholder', isEn ? (I18N_EN[key] ?? el.dataset.esPh) : el.dataset.esPh);
+        });
+        document.querySelectorAll('[data-i18n-title]').forEach(el => {
+          const key = el.getAttribute('data-i18n-title');
+          el.setAttribute('title', isEn ? (I18N_EN[key] ?? el.dataset.esTitle) : el.dataset.esTitle);
+        });
+        document.documentElement.lang = lang;
+        document.title = I18N_META[lang].title;
+        if (metaDesc) metaDesc.setAttribute('content', I18N_META[lang].desc);
+        document.querySelectorAll('.lang-btn').forEach(b => {
+          const on = b.getAttribute('data-lang') === lang;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        localStorage.setItem('lang', lang);
+      }
+      // Por defecto: espa\u00f1ol (o preferencia guardada)
+      const saved = localStorage.getItem('lang');
+      applyLang(saved === 'en' ? 'en' : 'es');
+      document.querySelectorAll('.lang-btn').forEach(btn => {
+        btn.addEventListener('click', () => applyLang(btn.getAttribute('data-lang')));
+      });
+    })();
+
     // Theme Toggle
     const themeToggle = document.getElementById('themeToggle');
     const html = document.documentElement;
@@ -630,6 +795,37 @@
         const target = document.querySelector(this.getAttribute('href'));
         if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
+    });
+
+    // Barra de progreso de scroll + botón volver arriba
+    const scrollProgress = document.getElementById('scrollProgress');
+    const backToTop = document.getElementById('backToTop');
+    function onScroll(){
+      const st = window.scrollY || document.documentElement.scrollTop;
+      const h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      scrollProgress.style.width = (h > 0 ? (st / h) * 100 : 0) + '%';
+      backToTop.classList.toggle('visible', st > 500);
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+    backToTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Scrollspy: resaltar sección activa en la navegación
+    const navMap = {};
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(a => { navMap[a.getAttribute('href').slice(1)] = a; });
+    const spy = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const link = navMap[entry.target.id];
+        if (!link) return;
+        if (entry.isIntersecting) {
+          Object.values(navMap).forEach(l => l.classList.remove('active'));
+          link.classList.add('active');
+        }
+      });
+    }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+    ['about','skills','experience','education','awards','contact'].forEach(id => {
+      const s = document.getElementById(id);
+      if (s) spy.observe(s);
     });
   </script>
 </body>
